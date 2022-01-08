@@ -5,8 +5,8 @@ with open('README.md', 'rt', encoding="utf8") as f:
 
 setup(
     name="rapidfuzz_capi",
-    version="1.0.1",
-    url="https://github.com/maxbachmann/RapidFuzz",
+    version="1.0.2",
+    url="https://github.com/maxbachmann/rapidfuzz_capi",
     author="Max Bachmann",
     author_email="pypi@maxbachmann.de",
     description="C-API of RapidFuzz, which can be used to extend RapidFuzz from separate packages",

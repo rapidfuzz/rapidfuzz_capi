@@ -9,7 +9,6 @@ on:
       - published
 
 jobs:
-
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
@@ -28,7 +27,9 @@ jobs:
       - name: Build
         run: python setup.py sdist bdist_wheel
 
-      - uses: pypa/gh-action-pypi-publish@master
+      - name: Publish
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
           password: ${{ secrets.pypi_password }}
