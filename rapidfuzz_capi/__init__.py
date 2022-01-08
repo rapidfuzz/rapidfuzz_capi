@@ -1,4 +1,6 @@
-import os
+__author__ = "Max Bachmann"
+__license__ = "MIT"
+__version__ = "1.0.1"
 
 def get_include():
     """
@@ -16,4 +18,5 @@ def get_include():
                 include_dirs=[rapidfuzz_capi.get_include()])
         ...
     """
+    import os
     return os.path.dirname(__file__)
