@@ -1,7 +1,7 @@
 ## RapidFuzz C-API
 
 [![Continous Integration](https://github.com/maxbachmann/rapidfuzz_capi/workflows/Build/badge.svg)](https://github.com/maxbachmann/rapidfuzz_capi/actions)
-[![GitHub License](https://img.shields.io/github/license/maxbachmann.rapidfuzz_capi)](https://github.com/maxbachmann/rapidfuzz_capi/blob/main/LICENSE)
+[![GitHub License](https://img.shields.io/github/license/maxbachmann/rapidfuzz_capi)](https://github.com/maxbachmann/rapidfuzz_capi/blob/main/LICENSE)
 
 ## About
 
@@ -9,7 +9,7 @@ This package provides the C-API of RapidFuzz. It can be used inside the `pyproje
 
 ```toml
 [build-system]
-requires = ["wheel", "setuptools", "rapidfuzz_capi==1.0.1"]
+requires = ["wheel", "setuptools", "rapidfuzz_capi==1.0.2"]
 ```
 
 Similar to numpy the include path can be found in the following way:
