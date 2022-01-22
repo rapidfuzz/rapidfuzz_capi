@@ -1,14 +1,16 @@
 from libcpp cimport bool
-from libc.stdint cimport uint32_t, uint64_t, int64_t
+from libc.stdint cimport uint32_t, int64_t
 
 cdef extern from "rapidfuzz_capi.h":
     cdef enum RF_StringType:
+        RF_UINT8
+        RF_UINT16
+        RF_UINT32
         RF_UINT64
 
     uint32_t RF_SCORER_FLAG_MULTI_STRING
     uint32_t RF_SCORER_FLAG_RESULT_F64
     uint32_t RF_SCORER_FLAG_RESULT_I64
-    uint32_t RF_SCORER_FLAG_RESULT_U64
     uint32_t RF_SCORER_FLAG_SYMMETRIC
     uint32_t RF_SCORER_FLAG_TRIANGLE_INEQUALITY
 
@@ -17,7 +19,7 @@ cdef extern from "rapidfuzz_capi.h":
 
         RF_StringType kind
         void* data
-        size_t length
+        int64_t length
         void* context
 
     ctypedef bool (*RF_Preprocess) (object, RF_String*) except False
@@ -37,7 +39,6 @@ cdef extern from "rapidfuzz_capi.h":
 
     ctypedef union _RF_ScorerFunc_union:
         bool (*f64) (const RF_ScorerFunc*, const RF_String*, double, double*) nogil except False
-        bool (*u64) (const RF_ScorerFunc*, const RF_String*, uint64_t, uint64_t*) nogil except False
         bool (*i64) (const RF_ScorerFunc*, const RF_String*, int64_t, int64_t*) nogil except False
 
     ctypedef struct RF_ScorerFunc:
@@ -46,16 +47,14 @@ cdef extern from "rapidfuzz_capi.h":
 
         void* context
 
-    ctypedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc*, const RF_Kwargs*, size_t, const RF_String*) nogil except False
+    ctypedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc*, const RF_Kwargs*, int64_t, const RF_String*) nogil except False
 
     ctypedef union _RF_RF_ScorerFlags_OptimalScore_union:
         double   f64
-        uint64_t u64
         int64_t  i64
 
     ctypedef union _RF_RF_ScorerFlags_WorstScore_union:
         double   f64
-        uint64_t u64
         int64_t  i64
 
     ctypedef struct RF_ScorerFlags:

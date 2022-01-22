@@ -29,7 +29,7 @@ typedef struct _RF_String {
 /* members */
     RF_StringType kind;
     void* data;
-    size_t length;
+    int64_t length;
     void* context;
 } RF_String;
 
@@ -90,7 +90,6 @@ typedef struct _RF_ScorerFunc {
      * @note has to be specified using RF_SCORER_FLAG_*:
      * - RF_SCORER_FLAG_RESULT_F64 -> call_f64
      * - RF_SCORER_FLAG_RESULT_I64 -> call_i64
-     * - RF_SCORER_FLAG_RESULT_U64 -> call_u64
      * 
      * @param[in] self pointer to RF_ScorerFunc instance
      * @param[in] str string to calculate distance with `strings` passed into `ctor`
@@ -101,7 +100,6 @@ typedef struct _RF_ScorerFunc {
      */
     union {
         bool (*f64) (const struct _RF_ScorerFunc* self, const RF_String* str, double score_cutoff, double* result);
-        bool (*u64) (const struct _RF_ScorerFunc* self, const RF_String* str, uint64_t score_cutoff, uint64_t* result);
         bool (*i64) (const struct _RF_ScorerFunc* self, const RF_String* str, int64_t score_cutoff, int64_t* result);
     } call;
 
@@ -120,7 +118,7 @@ typedef struct _RF_ScorerFunc {
  *
  * @return true on success and false with a Python exception set on failure
  */
-typedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc* self, const RF_Kwargs* kwargs, size_t str_count, const RF_String* strings);
+typedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc* self, const RF_Kwargs* kwargs, int64_t str_count, const RF_String* strings);
 
 /* scorer supports str_count != 1.
  * This is useful for scorers which have SIMD support
@@ -132,9 +130,6 @@ typedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc* self, const RF_Kwargs* kwargs,
 
 /* scorer returns result as int64_t */
 #define RF_SCORER_FLAG_RESULT_I64            ((uint32_t)1 << 2)
-
-/* scorer returns result as uint64_t */
-#define RF_SCORER_FLAG_RESULT_U64            ((uint32_t)1 << 3)
 
 /* scorer is symmetric: scorer(a, b) == scorer(b, a) */
 #define RF_SCORER_FLAG_SYMMETRIC             ((uint32_t)1 << 11)
@@ -151,7 +146,6 @@ typedef struct _RF_ScorerFlags {
      */
     union {
         double   f64;
-        uint64_t u64;
         int64_t  i64;
     } optimal_score;
 
@@ -160,7 +154,6 @@ typedef struct _RF_ScorerFlags {
      */
     union {
         double   f64;
-        uint64_t u64;
         int64_t  i64;
     } worst_score;
 } RF_ScorerFlags;

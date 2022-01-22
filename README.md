@@ -9,7 +9,7 @@ This package provides the C-API of RapidFuzz. It can be used inside the `pyproje
 
 ```toml
 [build-system]
-requires = ["wheel", "setuptools", "rapidfuzz_capi==1.0.2"]
+requires = ["wheel", "setuptools", "rapidfuzz_capi==1.0.3"]
 ```
 
 Similar to numpy the include path can be found in the following way:
