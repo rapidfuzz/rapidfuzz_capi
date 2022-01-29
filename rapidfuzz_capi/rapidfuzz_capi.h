@@ -99,8 +99,8 @@ typedef struct _RF_ScorerFunc {
      * @return true on success and false with a Python exception set on failure
      */
     union {
-        bool (*f64) (const struct _RF_ScorerFunc* self, const RF_String* str, double score_cutoff, double* result);
-        bool (*i64) (const struct _RF_ScorerFunc* self, const RF_String* str, int64_t score_cutoff, int64_t* result);
+        bool (*f64) (const struct _RF_ScorerFunc* self, const RF_String* str, int64_t str_count, double score_cutoff, double* result);
+        bool (*i64) (const struct _RF_ScorerFunc* self, const RF_String* str, int64_t str_count, int64_t score_cutoff, int64_t* result);
     } call;
 
 /* members */
@@ -120,16 +120,21 @@ typedef struct _RF_ScorerFunc {
  */
 typedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc* self, const RF_Kwargs* kwargs, int64_t str_count, const RF_String* strings);
 
-/* scorer supports str_count != 1.
+/* RF_ScorerFuncInit supports str_count != 1.
  * This is useful for scorers which have SIMD support
  */
-#define RF_SCORER_FLAG_MULTI_STRING          ((uint32_t)1 << 0)
+#define RF_SCORER_FLAG_MULTI_STRING_INIT     ((uint32_t)1 << 0)
+
+/* RF_ScorerFunc::call can be called with str_count != 1
+ * This is useful for scorers which have SIMD support
+ */
+#define RF_SCORER_FLAG_MULTI_STRING_CALL     ((uint32_t)1 << 1)
 
 /* scorer returns result as double */
-#define RF_SCORER_FLAG_RESULT_F64            ((uint32_t)1 << 1)
+#define RF_SCORER_FLAG_RESULT_F64            ((uint32_t)1 << 5)
 
 /* scorer returns result as int64_t */
-#define RF_SCORER_FLAG_RESULT_I64            ((uint32_t)1 << 2)
+#define RF_SCORER_FLAG_RESULT_I64            ((uint32_t)1 << 6)
 
 /* scorer is symmetric: scorer(a, b) == scorer(b, a) */
 #define RF_SCORER_FLAG_SYMMETRIC             ((uint32_t)1 << 11)

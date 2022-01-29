@@ -5,7 +5,7 @@ with open('README.md', 'rt', encoding="utf8") as f:
 
 setup(
     name="rapidfuzz_capi",
-    version="1.0.3",
+    version="1.0.4",
     url="https://github.com/maxbachmann/rapidfuzz_capi",
     author="Max Bachmann",
     author_email="pypi@maxbachmann.de",
