@@ -11,13 +11,19 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
+/**
+ * @brief string types
+ */
 enum RF_StringType {
-    RF_UINT8,  /* uint8_t */
-    RF_UINT16, /* uint16_t */
-    RF_UINT32, /* uint32_t */
-    RF_UINT64  /* uint64_t */
+    RF_UINT8,  /**< char type uint8_t */
+    RF_UINT16, /**< char type uint16_t */
+    RF_UINT32, /**< char type uint32_t */
+    RF_UINT64  /**< char type uint64_t */
 };
 
+/**
+ * @brief basic string type used for all strings in RapidFuzz
+ */
 typedef struct _RF_String {
     /**
      * @brief destructor for RF_String
@@ -27,10 +33,12 @@ typedef struct _RF_String {
     void (*dtor) (struct _RF_String* self);
 
 /* members */
-    RF_StringType kind;
-    void* data;
-    int64_t length;
-    void* context;
+    RF_StringType kind; /**< flag to specify string type stored in data */
+    void* data;         /**< string data */
+    int64_t length;     /**< string length */
+    void* context;      /**< context which can be used to store addition information
+                          * required for the string like e.g. a PyObject which needs
+                          * to be decrefed in the destructor */
 } RF_String;
 
 /**
@@ -49,10 +57,13 @@ typedef bool (*RF_Preprocess) (PyObject* obj, RF_String* str);
 typedef struct {
 #define PREPROCESSOR_STRUCT_VERSION ((uint32_t)1)
     uint32_t version; /**< version number of the structure. Set to PREPROCESSOR_STRUCT_VERSION */
-    RF_Preprocess preprocess;
+    RF_Preprocess preprocess; /**< function to preprocess string */
 } RF_Preprocessor;
 
 
+/**
+ * @brief struct describing keyword arguments
+ */
 typedef struct _RF_Kwargs {
     /**
      * @brief destructor for RF_Kwargs
@@ -62,7 +73,7 @@ typedef struct _RF_Kwargs {
     void (*dtor) (struct _RF_Kwargs* self);
 
 /* members */
-    void* context;
+    void* context; /**< context used to store the keyword arguments */
 } RF_Kwargs;
 
 /**
@@ -76,6 +87,9 @@ typedef struct _RF_Kwargs {
 typedef bool (*RF_KwargsInit) (RF_Kwargs* self, PyObject* kwargs);
 
 
+/**
+ * @brief struct describing a Scorer
+ */
 typedef struct _RF_ScorerFunc {
     /**
      * @brief Destructor for RF_ScorerFunc
@@ -90,7 +104,7 @@ typedef struct _RF_ScorerFunc {
      * @note has to be specified using RF_SCORER_FLAG_*:
      * - RF_SCORER_FLAG_RESULT_F64 -> call_f64
      * - RF_SCORER_FLAG_RESULT_I64 -> call_i64
-     * 
+     *
      * @param[in] self pointer to RF_ScorerFunc instance
      * @param[in] str string to calculate distance with `strings` passed into `ctor`
      * @param[in] score_cutoff argument for a score threshold
@@ -104,7 +118,7 @@ typedef struct _RF_ScorerFunc {
     } call;
 
 /* members */
-    void* context;
+    void* context; /**< context of the scorer */
 } RF_ScorerFunc;
 
 /**
@@ -144,7 +158,13 @@ typedef bool (*RF_ScorerFuncInit) (RF_ScorerFunc* self, const RF_Kwargs* kwargs,
  */
 #define RF_SCORER_FLAG_TRIANGLE_INEQUALITY   ((uint32_t)1 << 12 | RF_SCORER_FLAG_SYMMETRIC)
 
+/**
+ * @brief information associated with a scorer
+ */
 typedef struct _RF_ScorerFlags {
+    /**
+     * @brief flags of the scorer
+     */
     uint32_t flags;
     /**
      * @brief optimal score which can be achieved.
@@ -179,9 +199,9 @@ typedef bool (*RF_GetScorerFlags) (const RF_Kwargs* kwargs, RF_ScorerFlags* scor
 typedef struct {
 #define SCORER_STRUCT_VERSION ((uint32_t)1)
     uint32_t version; /**< version number of the structure. Set to SCORER_STRUCT_VERSION */
-    RF_KwargsInit kwargs_init;
-    RF_GetScorerFlags get_scorer_flags;
-    RF_ScorerFuncInit scorer_func_init;
+    RF_KwargsInit kwargs_init; /**< keyword argument constructor */
+    RF_GetScorerFlags get_scorer_flags; /**< function to retrieve additional information about the scorer */
+    RF_ScorerFuncInit scorer_func_init; /**< scorer constructor */
 } RF_Scorer;
 
 #ifdef __cplusplus
